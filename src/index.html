@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html class="h-100" lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="theme-color" content="#343a40">
+    <link rel="manifest" href="manifest.json">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>COTA</title>
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/codemirror.min.css">
+    <link rel="stylesheet" href="assets/css/hopscotch.min.css">
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/codemirror.min.js"></script>
+    <script src="assets/js/mark-selection.min.js"></script>
+    <script src="assets/js/show-hint.min.js"></script>
+    <script src="assets/js/hopscotch.min.js"></script>
+
+    <script src="assets/js/musical.min.js"></script>
+
+    <link rel="stylesheet" href="assets/css/estilo.min.css">
+    <script src="assets/js/cota.js"></script>
+    <script>
+
+        window.addEventListener('load', e => {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker
+                    .register('sw.js')
+                    .then(function () { console.log("Service Worker Registered"); })
+            }
+        });
+
+    </script>
+</head>
+
+<body class="h-100">
+
+    <div class="h-100" style="background-color: #272822;">
+        <div class="h-100 d-flex flex-column">
+
+            <textarea id="editor">
+saida('Olá mundo!')
+</textarea>
+
+            <div id="secao-janela" class="secao-janela d-flex align-content-center justify-content-center">
+            </div>
+
+
+            <div class="secao-variaveis">
+                <div class="titulo d-flex align-items-center align-content-between">
+                    <i class="fa fa-fw fa-eye"></i>
+                    <span class="flex-grow-1 ml-1">VARIÁVEIS</span>
+                    <i acao="fechar-variaveis" class="fa fa-times m-1 mr-0"></i>
+                </div>
+                <div class="variaveis"></div>
+            </div>
+
+            <div class="secao-saida">
+                <div class="titulo d-flex align-items-center align-content-between">
+                    <i class="fa fa-fw fa-desktop"></i>
+                    <span class="flex-grow-1 ml-1">SAÍDA</span>
+                    <span>
+                        <i acao="maximizar-saida" class="fa fa-window-maximize mr-0"></i>
+                        <i acao="fechar-saida" class="fa fa-times m-1 mr-0"></i>
+                    </span>
+                </div>
+                <div id="saida" class="saida"></div>
+            </div>
+
+            <div class="secao-comandos">
+
+                <div class="secao-caracteres ">
+                    <div class="d-flex justify-content-between align-content-center">
+                        <button class="btn btn-sm text-light" acao="caracter" caracter="tab" type="button">T</button>
+                        <button class="btn btn-sm text-light" acao="caracter" caracter="=" type="button">=</button>
+                        <button class="btn btn-sm text-light" acao="caracter" caracter='""' type="button"
+                            posicao="-1">""</button>
+                        <button class="btn btn-sm text-light" acao="caracter" caracter="," type="button">,</button>
+                        <button class="btn btn-sm text-light" acao="caracter" caracter="()" type="button"
+                            posicao="-1">()</button>
+                        <button class="btn btn-sm text-light" acao="caracter" caracter="{}" type="button"
+                            posicao="-1">{}</button>
+                        <button class="btn btn-sm text-light" acao="caracter" caracter="+" type="button">+</button>
+                        <button class="btn btn-sm text-light" acao="caracter" caracter="-" type="button">-</button>
+                        <button class="btn btn-sm text-light" acao="caracter" caracter=">" type="button">&gt;</button>
+                        <button class="btn btn-sm text-light" acao="caracter" caracter="<" type="button">&lt;</button>
+                    </div>
+                </div>
+
+                <div class="secao-botoes text-center bg-light">
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Comandos">
+                        <button class="btn btn-light btn-novo" acao="novo" type="button" title="Novo código">
+                            <i class="fa fa-fw fa-plus"></i>
+                        </button>                        
+                        <button class="btn btn-light btn-parar" disabled acao="executar-parar" type="button" title="Parar">
+                            <i class="fa fa-fw fa-stop text-danger"></i>
+                        </button>
+                        <button class="btn btn-light btn-executar-rapido" acao="executar-rapido" type="button" title="Executar">
+                            <i class="fa fa-fw fa-play text-success"></i>
+                        </button>
+                        <button class="btn btn-light btn-executar-linha" acao="executar-linha" type="button" title="Passo a passo">
+                            <i class="fa fa-fw fa-step-forward"></i>
+                        </button>
+                        <button class="btn btn-light btn-executar-lento" acao="executar-lento" type="button" title="Executar lentamente">
+                            <i class="fa fa-fw fa-fast-forward"></i>
+                        </button>
+                        <button class="btn btn-light btn-executar-rapido-auto" acao="executar-rapido" magico="true" type="button"
+                            title="Executar com preenchimento automático">
+                            <i class="fa fa-fw fa-magic"></i>
+                        </button>
+                        <button class="btn btn-light btn-abrir-saida" acao="alternar-saida" type="button" title="Saída">
+                            <i class="fa fa-fw fa-desktop"></i>
+                        </button>
+                        <button class="btn btn-light btn-menu" acao="abrir-menu" type="button" title="Menu de opções">
+                            <i class="fa fa-fw fa-ellipsis-v"></i>
+                        </button>                        
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="exemplosModal" tabindex="-1" role="dialog" aria-labelledby="exemploModalTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header py-2 px-3">
+                    <h5 class="modal-title" id="exemploModalTitle">Exemplos</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="exemplosModalLista">
+                </div>
+                <div class="modal-footer py-2 px-3">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="feedBackModal" tabindex="-1" role="dialog" aria-labelledby="FeedbackModalTitle"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header py-2 px-3">
+                    <h5 class="modal-title" id="FeedbackModalTitle">Feedback</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <textarea class="form-control" rows="10"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer py-2 px-3">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="configModal" tabindex="-1" role="dialog" aria-labelledby="configModalTitle"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header py-2 px-3">
+                    <h5 class="modal-title" id="configModalTitle">Configurações</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <form id="configForm">
+                        <div class="form-group">
+                            <label for="config-item-tamanho-fonte">Tamanho da fonte</label>
+                            <select class="form-control" id="config-item-tamanho-fonte">
+                                <option value="10px">10</option>
+                                <option value="11px">11</option>
+                                <option value="12px">12</option>
+                                <option value="13px">13</option>
+                                <option value="14px">14</option>
+                                <option value="15px">15</option>
+                                <option value="16px">16</option>
+                                <option value="17px">17</option>
+                                <option value="18px">18</option>
+                                <option value="19px">19</option>
+                                <option value="20px">20</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="config-item-execucao-automatica">Tempo da execução automática</label>
+                            <select class="form-control" id="config-item-execucao-automatica">
+                                <option value="100">100</option>
+                                <option value="100">150</option>
+                                <option value="200">200</option>
+                                <option value="300">300</option>
+                                <option value="500">500</option>
+                                <option value="800">800</option>
+                                <option value="1000">1000</option>
+                                <option value="1500">1500</option>
+                                <option value="2000">2000</option>
+                                
+                            </select>
+                        </div>                        
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="config-item-exibir-variaveis">
+                            <label class="form-check-label" for="config-item-exibir-variaveis">Exibir variaveis</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer py-2 px-3">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        onclick="document.getElementById('configForm').reset();">Fechar</button>
+                    <button type="button" class="btn btn-primary" acao="config-salvar"
+                        data-dismiss="modal">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="sobreModal" tabindex="-1" role="dialog" aria-labelledby="sobreModalTitle"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header py-2 px-3">
+                    <h5 class="modal-title" id="sobreModalTitle">Sobre</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="text-center mb-5">
+                        <img src="assets/images/logo-preto.png" style="width: 30%;">
+                    </div>
+                    <p class="text-center">
+                        Bem vindo ao Cota Studio<br>
+                        Desenvolvido por Manoel Flores Neto<br>
+                        2020
+                    </p>
+                    <p class="text-center">
+                        <a href="#" acao="testes">Testes (Console)</a>
+                    </p>
+                </div>
+                <div class="modal-footer py-2 px-3">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ajudaModal" tabindex="-1" role="dialog" aria-labelledby="ajudaModalTitle"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header py-2 px-3">
+                    <h5 class="modal-title" id="ajudaModalTitle">Ajuda</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="ajudaModalContent">
+                    <h3>A linguagem</h3>
+                    <h4>Básico</h4>
+                    <p>
+                    <ul>
+                        <li>É permitido o uso de acentuação e cedilha, tanto para identificadores (nomes de variáveis e
+                            funções) e palavras reservadas.</li>
+                        <li>Não é case-sensitive, ou seja <b>açaí</b>, <b>AÇAÍ</b> e <b>aÇaÍ</b> referenciam a mesma
+                            variável.</li>
+                        <li>A linguagem é dinâmicamente tipada.</li>
+                        <li>Não é orientada objetos, porém consegue trabalhar obter ou atribuir valores em atributos em dados do tipo 'Object'.</li>
+                        <li>Variáveis não precisam ser declaradas.</li>
+                        <li>Não é preciso criar uma estrutura básica.</li>
+                        <li>Não é preciso fazer quebra de linhas para iniciar uma nova instrução.</li>
+                        <li>O uso de ponto de virgula é opcional.</li>
+                        <li>Funções não podem ser declaradas em qualquer parte do código exceto dentro da declaração de
+                            outras funções.</li>
+                    </ul>
+                    </p>
+                    <h4>Tipos de Dados</h4>
+                    <code>
+                        v <span class="s">=</span> <span class="n">1</span> <span class="c"> // decimal </span><br>
+                        v <span class="s">=</span> <span class="n">1.0</span> <span class="c"> // ponto flutuante </span><br>
+                        v <span class="s">=</span> <span class="n">0xFF</span> <span class="c"> // hexadecimal </span><br>
+                        v <span class="s">=</span> <span class="n">0b1111</span> <span class="c"> // binário </span><br>
+                        v <span class="s">=</span> <span class="n">0o20</span> <span class="c"> // octal </span><br>
+                        v <span class="s">=</span> <span class="st">'amarelo'</span> <span class="c"> // texto </span><br>
+                        v <span class="s">=</span> <span class="s">verdade</span> <span class="c"> // lógico </span><br>
+                        v <span class="s">=</span> <span class="s">falso</span> <span class="c"> // lógico </span><br>
+                        v <span class="s">=</span> <span class="s">nulo</span> <span class="c"> // nulo </span><br>
+                        v <span class="s">=</span> <span class="s">[</span><span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span><span class="s">]</span> <span class="c"> // vetor </span><br>
+                    </code>
+                    <h4>Comentários</h4>
+                    <p>
+                        <code>
+                            <span class="c">// uma linha, primeiro modo</span><br>
+                            <span class="c"># uma linha, segundo modo</span><br>
+                            <span class="c">/* múltiplas linhas */</span>
+                        </code>
+                    <h4>Variáveis</h4>
+                    <p>
+                        <code>
+                            <span class="k">const</span> idade<br>
+                            <span class="k">var</span> idade<br>
+                            <span class="k">const</span> idade <span class="s">=</span> <span class="n">34</span><br>
+                            <span class="k">var</span> idade <span class="s">=</span> <span class="n">34</span><br>
+                            idade <span class="s">=</span> <span class="n">34</span><br>
+                            idade <span class="s">recebe</span> <span class="n">34</span><br>
+                            idade <span class="s">&lt;-</span> <span class="n">34</span><br>
+                            idade <span class="s">+=</span> <span class="n">1</span><br>
+                            idade <span class="s">-=</span> <span class="n">1</span><br>
+                            idade <span class="s">*=</span> <span class="n">2</span><br>
+                            idade <span class="s">/=</span> <span class="n">2</span><br>
+                            idade <span class="s">%=</span> <span class="n">2</span><br>
+                        </code>
+                        <h4>Acesso a atributos</h4>
+                        <p>
+                            <code>
+                                <span class="k">var</span> obj <span class="s">=</span> <span class="f">ObjetoTeste</span><span class="s">()</span><br>
+                                obj<span class="s">.</span>cor<span class="s"> = </span><span class="n">'red'</span><br>
+                                obj<span class="s">.</span>fonte<span class="s">.</span>tamanho<span class="s"> = </span><span class="n">'14px'</span><br>
+                            </code>                        
+                    <h4>Estruturas</h4>
+                    <h5>Ternário</h5>
+                    <code>
+                        idade <span class="s">=</span> idade<span class="s"> &gt; </span><span class="n">18</span> <span class="s">?</span><span class="st">'Maior'</span><span class="n"> : </span><span class="st">'Menor'</span><br>
+                    </code>
+                    <h5>Controle de fluxo (condicionais)</h5>
+                    <code>
+                        <span class="k">se</span> idade <span class="s">&gt;</span> <span class="n">18</span> <span class="k">entao</span><br>
+                        <span class="tab"></span><span class="f">saida</span><span class="s">(</span><span class="st">'verdade'</span><span class="s">)</span><br>                        
+                        <br>
+                        <span class="k">se</span> idade <span class="s">&gt;</span> <span class="n">18</span> <span class="k">entao</span><br>
+                        <span class="tab"></span><span class="f">saida</span><span class="s">(</span><span class="st">'verdade'</span><span class="s">)</span><br>
+                        <span class="k">senao</span><br>
+                        <span class="tab"></span><span class="f">saida</span><span class="s">(</span><span class="st">'falso'</span><span class="s">)</span><br>
+                        <br>
+                        <span class="k">escolha</span> idade <span class="s">{<br>
+                        <span class="tab"></span><span class="k">caso</span> <span class="n">18</span><span class="s">: {</span><br>
+                        <span class="tab"></span><span class="tab"></span><span class="f">saida</span><span class="s">(</span><span class="st">'dezoito anos'</span><span class="s">)</span><br>
+                        <span class="tab"></span><span class="tab"></span><span class="k">pare</span><br>
+                        <span class="tab"></span><span class="s">}</span><br>
+                        <span class="tab"></span><span class="k">caso</span> <span class="n">20</span><span class="s">: {</span><br>
+                        <span class="tab"></span><span class="tab"></span><span class="f">saida</span><span class="s">(</span><span class="st">'vinte anos'</span><span class="s">)</span><br>
+                        <span class="tab"></span><span class="tab"></span><span class="k">pare</span><br>
+                        <span class="tab"></span><span class="s">}</span><br>                        
+                        <span class="tab"></span><span class="k">padrao</span>: {</span><br>
+                        <span class="tab"></span><span class="tab"></span><span class="f">saida</span><span class="s">(</span><span class="st">'outra idade'</span><span class="s">)</span><br>
+                        <span class="tab"></span><span class="tab"></span><span class="k">pare</span><br>
+                        <span class="tab"></span><span class="s">}</span><br>
+                        </span><span class="s">}</span>
+                    </code>
+                    <h5>Laços de repetição</h5>
+                    <code>
+                        <span class="k">enquanto</span> i <span class="s">&lt;</span> <span class="n">5</span> <span class="k">faca</span><br>
+                        <span class="tab"></span>i<span class="s">++</span><br>
+                        <span class="tab"></span><span class="f">saida</span><span class="s">(</span>i<span class="s">)</span><br>
+                        <span class="s">}</span><br>
+                        <br>
+                        <span class="k">faca</span> <span class="s">{</span><br>
+                        <span class="tab"></span>i<span class="s">++</span><br>
+                        <span class="tab"></span><span class="f">saida</span><span class="s">(</span>i<span class="s">)</span><br>
+                        <span class="s">}</span><span class="k"> enquanto</span> i <span class="s">&lt;</span> <span class="n">5</span><br>
+                        <br>             
+                        numeros <span class="s">= [</span><span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>, <span class="n">4</span><span class="s">]</span><br>
+                        <span class="k">cada</span> numero <span class="k">em</span> numeros<br>
+                        <span class="tab"></span><span class="f">saida</span><span class="s">(</span>numero<span class="s">)</span><br>
+                        <br>    
+                        <span class="k">para</span> i <span class="k">de</span><span class="n"> 1 </span> <span class="k">ate</span> <span class="n">10</span> [<span class="k">passo</span> <span class="n">2</span>] <span class="k">faca</span> <span class="s">{</span><br>
+                        <span class="tab"></span><span class="f">saida</span><span class="s">(</span>i<span class="s">)</span><br>
+                        <span class="s">}</span><br>
+                        <br>
+                        <span class="k">para</span><span class="s">(</span>i <span class="s"> =</span><span class="n"> 0</span><span class="s">;</span> i <span class="s">&lt;</span> <span class="n">10</span><span class="s">;</span> i<span class="s">++) {</span><br>
+                            <span class="tab"></span><span class="f">saida</span><span class="s">(</span>i<span class="s">)</span><br>
+                            <span class="s">}</span><br>                                                
+                        <br>                                       
+                    </code>
+                    <h5>Funções</h5>
+                    <code>
+                        <span class="k">funcao</span> somar<span class="s">(</span>a, b<span class="s">){</span><br>
+                        <span class="tab"></span><span class="k">retorno</span> a <span class="s">+</span> b<br>
+                        <span class="s">}</span><br>      
+                        <span class="f">somar</span><span class="s">(</span><span class="n">10</span>, <span class="n">20</span><span class="s">)</span><br>                                                    
+                    </code>
+                    <h5>Incremento/Decremento</h5>
+                    <code>
+                        i <span class="s">=</span> <span class="n">1</span><br> 
+                        i<span class="s">++</span><span class="c"> // i = 2</span><br>
+                        <br>
+                        i <span class="s">=</span> <span class="n">1</span><br> 
+                        i<span class="s">--</span><span class="c"> // i = 0</span><br>                        
+                    </code>
+                    <h3>Funções do sistema</h3>
+                    <table id="ajudaFuncoesSistema" class="table">
+                        <thead>
+                            <th>Função</th>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer py-2 px-3">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="codigoModal" tabindex="-1" role="dialog" aria-labelledby="codigoModalTitle"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header py-2 px-3">
+                    <h5 class="modal-title" id="codigoModalTitle"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="codigoModalCodigo">
+
+                </div>
+                <div class="modal-footer py-2 px-3">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="menuModal" tabindex="-1" role="dialog" aria-labelledby="menuModalTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header py-2 px-3">
+                    <h5 class="modal-title">Menu</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body px-0 pt-0">
+
+                    <ul class="list-group list-group-flush">
+                        <a href="#" class="list-group-item list-group-item-action py-2 px-4" acao="novo">Novo</a>
+
+                        <a href="#" class="list-group-item list-group-item-action py-2 px-4" acao="abrir">Abrir</a>
+                        <a href="#" class="list-group-item list-group-item-action py-2 px-4 border-0" acao="salvar">Salvar</a>
+
+                        <a href="#" class="list-group-item list-group-item-action py-2 px-4" acao="abrir-config">Configurações</a>
+                        <a href="#" class="list-group-item list-group-item-action py-2 px-4 border-0" acao="abrir-tokens">Tokens</a>
+                        <a href="#" class="list-group-item list-group-item-action py-2 px-4 border-0" acao="abrir-bytecode">Bytecodes</a>
+
+                        <a href="#" class="list-group-item list-group-item-action py-2 px-4" acao="abrir-ajuda">Ajuda</a>
+                        <a href="#" class="list-group-item list-group-item-action py-2 px-4 border-0" acao="abrir-exemplos">Exemplos</a>
+                        <a href="#" class="list-group-item list-group-item-action py-2 px-4 border-0" acao="abrir-tour">Tour</a>
+
+                        <a href="#" class="list-group-item list-group-item-action py-1 px-4" acao="abrir-sobre">Sobre</a>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>    
+
+
+    <input type="file" id="arquivo" style="display: none;">
+</body>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-12161912-12"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-12161912-12');
+</script>
+
+<script>
+    $(".dropdown-submenu [data-toggle='dropdown']").on("click", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        $(this).parent().siblings().find(".dropdown-menu").removeClass("show");
+        $(this).next().addClass("show");
+
+        if (!$(this).next().hasClass('show')) {
+            $(this).parents('.dropdown-menu').first().find('.show').removeClass("show");
+        }
+        $(this).parents('.dropdown.show').on('hidden.bs.dropdown', function (e) {
+            $('.dropdown-submenu .show').removeClass("show");
+            $('.navbar-collapse').collapse('hide');
+
+        });
+    });
+
+    $(document).click(function (event) {
+        $('.navbar-collapse').collapse('hide');
+    });
+
+</script>
+
+
+</html>
