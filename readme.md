@@ -2,6 +2,8 @@
 # Kotha Studio
 Linguagem de programação destinada ao ensino de programação.
 
+<a href="https://manoelfnn.github.io/kotha_studio/">Demo</a>
+
 ## Características
 
 *   É permitido o uso de acentuação e cedilha, tanto para identificadores (nomes de variáveis e funções) e palavras reservadas.
